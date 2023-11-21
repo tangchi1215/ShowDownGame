@@ -4,12 +4,10 @@ import org.example.model.event.ExchangeHandsEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Game {
     private final Deck deck;
     private final List<Player> players;
-    private final Random random = new Random();
     private final List<ExchangeHandsEvent> exchanges;
     private final PlayerInputHandler playerInputHandler = new PlayerInputHandler();
 
@@ -21,6 +19,11 @@ public class Game {
         setupPlayerNames();
     }
 
+    /**
+     * init the number of Players
+     *
+     * @param numHumanPlayers int
+     */
     private void initPlayers(int numHumanPlayers) {
         for (int i = 0; i < numHumanPlayers; i++) {
             players.add(new HumanPlayer("Human Player " + (i + 1)));
@@ -85,7 +88,7 @@ public class Game {
         Player roundWinner = determineRoundWinner(playedCards);
         roundWinner.addPoint();
         System.out.println("-------------------------------------------");
-        System.out.println("Round winner: " + roundWinner.getName() + " with " + roundWinner.getPoint() + " points.");
+        System.out.println("Round winner: " + roundWinner.getName() + " with " + roundWinner.getPoint() + " point(s).");
         System.out.println("===========================================");
     }
 
@@ -112,7 +115,7 @@ public class Game {
             }
         }
         System.out.println("Game Winner: " + gameWinner.getName());
-        System.out.println("Total Score: "+ gameWinner.getPoint() + " points.");
+        System.out.println("Total Score: "+ gameWinner.getPoint() + " point(s).");
     }
 
     private int compareCards(Card card1, Card card2) {
@@ -140,13 +143,11 @@ public class Game {
     private void handleExchangeHands() {
         for (Player player : players) {
             if (player instanceof HumanPlayer && player.canExchangeHands()) {
-                // 人类玩家的交换决策
                 boolean wantsToExchange = playerInputHandler.askExchange(player.getName());
                 if (wantsToExchange) {
                     performExchange(player);
                 }
             } else if (player instanceof AIPlayer aiPlayer && player.canExchangeHands()) {
-                // AI 玩家的交换决策
                 boolean wantsToExchange = aiPlayer.makeRandomChoice();
                 if (wantsToExchange) {
                     Player chosenPlayer = aiPlayer.chooseRandomPlayer(getOtherPlayers(aiPlayer));
@@ -165,10 +166,8 @@ public class Game {
         Player chosenPlayer = null;
 
         if (player instanceof HumanPlayer) {
-            // 人类玩家通过输入选择交换对象
             chosenPlayer = playerInputHandler.chooseExchangePlayer(possiblePlayers);
         } else if (player instanceof AIPlayer aiPlayer) {
-            // AI 玩家随机选择交换对象
             chosenPlayer = aiPlayer.chooseRandomPlayer(possiblePlayers);
         }
 
